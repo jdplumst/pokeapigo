@@ -224,4 +224,47 @@ func TestGetBerryFirmnessById(t *testing.T) {
 			t.Errorf("got %+v\nwant %+v\n", got, verySoftFirmness)
 		}
 	})
+
+	t.Run("invalid id", func(t *testing.T) {
+		_, err := berryClient.GetBerryFirmnessById(100)
+
+		switch err {
+		case types.ErrFetch, types.ErrBody, types.ErrUnmarshal:
+			return
+		case nil:
+			t.Error("got a berry firmness when expected an error:", err)
+		default:
+			t.Error("got an unexpected error:", err)
+
+		}
+	})
+}
+
+func TestGetBerryFirmnessByName(t *testing.T) {
+	berryClient := clients.Berries{}
+
+	t.Run("valid name", func(t *testing.T) {
+		got, err := berryClient.GetBerryFirmnessByName("very-soft")
+		if err != nil {
+			t.Errorf("did not return a berry firmness, %v", err)
+		}
+
+		if !reflect.DeepEqual(got, verySoftFirmness) {
+			t.Errorf("got %+v\nwant %+v\n", got, verySoftFirmness)
+		}
+	})
+
+	t.Run("invalid name", func(t *testing.T) {
+		_, err := berryClient.GetBerryFirmnessByName("invalid")
+
+		switch err {
+		case types.ErrFetch, types.ErrBody, types.ErrUnmarshal:
+			return
+		case nil:
+			t.Error("got a berry firmness when expected an error:", err)
+		default:
+			t.Error("got an unexpected error:", err)
+
+		}
+	})
 }
