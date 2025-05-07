@@ -10,13 +10,13 @@ import (
 )
 
 type IBerries interface {
-	GetBerryById(id int) (types.Berry, error)
-	GetBerryByName(name string) (types.Berry, error)
+	GetBerryById(id int) (*types.Berry, error)
+	GetBerryByName(name string) (*types.Berry, error)
 }
 
 type Berries struct{}
 
-func (b Berries) GetBerryById(id int) (types.Berry, error) {
+func (b Berries) GetBerryById(id int) (*types.Berry, error) {
 	var berry types.Berry
 
 	parsedId := strconv.Itoa(id)
@@ -25,17 +25,39 @@ func (b Berries) GetBerryById(id int) (types.Berry, error) {
 
 	response, err := http.Get(url)
 	if err != nil {
-		return berry, types.ErrFetch
+		return &berry, types.ErrFetch
 	}
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
-		return berry, types.ErrBody
+		return &berry, types.ErrBody
 	}
 
 	if err = json.Unmarshal(body, &berry); err != nil {
-		return berry, types.ErrUnmarshal
+		return &berry, types.ErrUnmarshal
 	}
 
-	return berry, nil
+	return &berry, nil
+}
+
+func (b Berries) GetBerryByName(name string) (*types.Berry, error) {
+	var berry types.Berry
+
+	url := "https://pokeapi.co/api/v2/berry/" + name
+
+	response, err := http.Get(url)
+	if err != nil {
+		return &berry, types.ErrFetch
+	}
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return &berry, types.ErrBody
+	}
+
+	if err = json.Unmarshal(body, &berry); err != nil {
+		return &berry, types.ErrUnmarshal
+	}
+
+	return &berry, nil
 }
