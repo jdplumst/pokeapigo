@@ -1,11 +1,9 @@
 package clients
 
 import (
-	"encoding/json"
-	"io"
-	"net/http"
 	"strconv"
 
+	"github.com/jdplumst/pokeapigo/internal/request"
 	"github.com/jdplumst/pokeapigo/pkg/types"
 )
 
@@ -24,21 +22,7 @@ func (b Berries) GetBerryById(id int) (*types.Berry, error) {
 
 	url := "https://pokeapi.co/api/v2/berry/" + parsedId
 
-	response, err := http.Get(url)
-	if err != nil {
-		return nil, types.ErrFetch
-	}
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return nil, types.ErrBody
-	}
-
-	if err = json.Unmarshal(body, &berry); err != nil {
-		return nil, types.ErrUnmarshal
-	}
-
-	return &berry, nil
+	return request.GetData(url, berry)
 }
 
 func (b Berries) GetBerryByName(name string) (*types.Berry, error) {
@@ -46,21 +30,7 @@ func (b Berries) GetBerryByName(name string) (*types.Berry, error) {
 
 	url := "https://pokeapi.co/api/v2/berry/" + name
 
-	response, err := http.Get(url)
-	if err != nil {
-		return nil, types.ErrFetch
-	}
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return nil, types.ErrBody
-	}
-
-	if err = json.Unmarshal(body, &berry); err != nil {
-		return nil, types.ErrUnmarshal
-	}
-
-	return &berry, nil
+	return request.GetData(url, berry)
 }
 
 func (b Berries) GetBerryFirmnessById(id int) (*types.BerryFirmness, error) {
@@ -70,19 +40,5 @@ func (b Berries) GetBerryFirmnessById(id int) (*types.BerryFirmness, error) {
 
 	url := "https://pokeapi.co/api/v2/berry-firmness/" + parsedId
 
-	response, err := http.Get(url)
-	if err != nil {
-		return nil, types.ErrFetch
-	}
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return nil, types.ErrBody
-	}
-
-	if err = json.Unmarshal(body, &berryFirmness); err != nil {
-		return nil, types.ErrUnmarshal
-	}
-
-	return &berryFirmness, nil
+	return request.GetData(url, berryFirmness)
 }
