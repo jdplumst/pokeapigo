@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	want = &types.Berry{
+	cheriBerry = &types.Berry{
 		Id:               1,
 		Name:             "cheri",
 		GrowthTime:       3,
@@ -23,31 +23,36 @@ var (
 			Url:  "https://pokeapi.co/api/v2/berry-firmness/2/",
 		},
 		Flavors: []types.BerryFlavorMap{
-			{Potency: 10,
+			{
+				Potency: 10,
 				Flavor: types.NamedApiResource{
 					Name: "spicy",
 					Url:  "https://pokeapi.co/api/v2/berry-flavor/1/",
 				},
 			},
-			{Potency: 0,
+			{
+				Potency: 0,
 				Flavor: types.NamedApiResource{
 					Name: "dry",
 					Url:  "https://pokeapi.co/api/v2/berry-flavor/2/",
 				},
 			},
-			{Potency: 0,
+			{
+				Potency: 0,
 				Flavor: types.NamedApiResource{
 					Name: "sweet",
 					Url:  "https://pokeapi.co/api/v2/berry-flavor/3/",
 				},
 			},
-			{Potency: 0,
+			{
+				Potency: 0,
 				Flavor: types.NamedApiResource{
 					Name: "bitter",
 					Url:  "https://pokeapi.co/api/v2/berry-flavor/4/",
 				},
 			},
-			{Potency: 0,
+			{
+				Potency: 0,
 				Flavor: types.NamedApiResource{
 					Name: "sour",
 					Url:  "https://pokeapi.co/api/v2/berry-flavor/5/",
@@ -63,6 +68,89 @@ var (
 			Url:  "https://pokeapi.co/api/v2/type/10/",
 		},
 	}
+
+	verySoftFirmness = &types.BerryFirmness{
+		Id:   1,
+		Name: "very-soft",
+		Berries: []types.NamedApiResource{
+			{
+				Name: "pecha",
+				Url:  "https://pokeapi.co/api/v2/berry/3/",
+			},
+			{
+				Name: "pamtre",
+				Url:  "https://pokeapi.co/api/v2/berry/32/",
+			},
+			{
+				Name: "belue",
+				Url:  "https://pokeapi.co/api/v2/berry/35/",
+			},
+			{
+				Name: "wacan",
+				Url:  "https://pokeapi.co/api/v2/berry/38/",
+			},
+			{
+				Name: "tanga",
+				Url:  "https://pokeapi.co/api/v2/berry/46/",
+			},
+			{
+				Name: "charti",
+				Url:  "https://pokeapi.co/api/v2/berry/47/",
+			},
+			{
+				Name: "chilan",
+				Url:  "https://pokeapi.co/api/v2/berry/52/",
+			},
+			{
+				Name: "rowap",
+				Url:  "https://pokeapi.co/api/v2/berry/64/",
+			},
+		},
+		Names: []types.Name{
+			{
+				Name: "とてもやわらかい",
+				Language: types.NamedApiResource{
+					Name: "ja-Hrkt",
+					Url:  "https://pokeapi.co/api/v2/language/1/",
+				},
+			},
+			{
+				Name: "很柔軟",
+				Language: types.NamedApiResource{
+					Name: "zh-Hant",
+					Url:  "https://pokeapi.co/api/v2/language/4/",
+				},
+			},
+			{
+				Name: "Très tendre",
+				Language: types.NamedApiResource{
+					Name: "fr",
+					Url:  "https://pokeapi.co/api/v2/language/5/",
+				},
+			},
+			{
+				Name: "Muy blanda",
+				Language: types.NamedApiResource{
+					Name: "es",
+					Url:  "https://pokeapi.co/api/v2/language/7/",
+				},
+			},
+			{
+				Name: "Very Soft",
+				Language: types.NamedApiResource{
+					Name: "en",
+					Url:  "https://pokeapi.co/api/v2/language/9/",
+				},
+			},
+			{
+				Name: "很柔软",
+				Language: types.NamedApiResource{
+					Name: "zh-Hans",
+					Url:  "https://pokeapi.co/api/v2/language/12/",
+				},
+			},
+		},
+	}
 )
 
 func TestGetBerryById(t *testing.T) {
@@ -74,8 +162,8 @@ func TestGetBerryById(t *testing.T) {
 			t.Errorf("did not return a berry, %v", err)
 		}
 
-		if !reflect.DeepEqual(got, want) {
-			t.Errorf("got %+v\nwant %+v\n", got, want)
+		if !reflect.DeepEqual(got, cheriBerry) {
+			t.Errorf("got %+v\nwant %+v\n", got, cheriBerry)
 		}
 	})
 
@@ -103,8 +191,8 @@ func TestGerBerryByName(t *testing.T) {
 			t.Errorf("did not return a berry, %v", err)
 		}
 
-		if !reflect.DeepEqual(got, want) {
-			t.Errorf("got %+v\nwant %+v\n", got, want)
+		if !reflect.DeepEqual(got, cheriBerry) {
+			t.Errorf("got %+v\nwant %+v\n", got, cheriBerry)
 		}
 	})
 
@@ -119,6 +207,21 @@ func TestGerBerryByName(t *testing.T) {
 		default:
 			t.Error("got an unexpected error:", err)
 
+		}
+	})
+}
+
+func TestGetBerryFirmnessById(t *testing.T) {
+	berryClient := clients.Berries{}
+
+	t.Run("valid id", func(t *testing.T) {
+		got, err := berryClient.GetBerryFirmnessById(1)
+		if err != nil {
+			t.Errorf("did not return a berry firmness, %v", err)
+		}
+
+		if !reflect.DeepEqual(got, verySoftFirmness) {
+			t.Errorf("got %+v\nwant %+v\n", got, verySoftFirmness)
 		}
 	})
 }
