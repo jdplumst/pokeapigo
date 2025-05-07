@@ -10,7 +10,7 @@ type Berry struct {
 	Smoothness       int              `json:"smoothness"`
 	SoilDryness      int              `json:"soil_dryness"`
 	Firmness         NamedApiResource `json:"firmness"`
-	Flavors          []BerryFlavorMap `json:"flavor"`
+	Flavors          []BerryFlavorMap `json:"flavors"`
 	Item             NamedApiResource `json:"item"`
 	NaturalGiftType  NamedApiResource `json:"natural_gift_type"`
 }
