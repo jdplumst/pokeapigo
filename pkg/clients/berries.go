@@ -13,6 +13,7 @@ type IBerries interface {
 	GetBerryFirmnessById(id int) (*types.BerryFirmness, error)
 	GetBerryFirmnessByName(name string) (*types.BerryFirmness, error)
 	GetBerryFlavorById(id int) (*types.BerryFlavor, error)
+	GetBerryFlavorByName(name string) (*types.BerryFlavor, error)
 }
 
 type Berries struct{}
@@ -59,6 +60,14 @@ func (b Berries) GetBerryFlavorById(id int) (*types.BerryFlavor, error) {
 	parsedId := strconv.Itoa(id)
 
 	url := "https://pokeapi.co/api/v2/berry-flavor/" + parsedId
+
+	return request.GetData(url, berryFlavor)
+}
+
+func (b Berries) GetBerryFlavorByName(name string) (*types.BerryFlavor, error) {
+	var berryFlavor types.BerryFlavor
+
+	url := "https://pokeapi.co/api/v2/berry-flavor/" + name
 
 	return request.GetData(url, berryFlavor)
 }

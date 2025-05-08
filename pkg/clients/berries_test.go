@@ -153,7 +153,7 @@ var (
 	}
 )
 
-func TestGetBerryById(t *testing.T) {
+func TestGetBerry(t *testing.T) {
 	berryClient := clients.Berries{}
 
 	t.Run("valid id", func(t *testing.T) {
@@ -180,10 +180,6 @@ func TestGetBerryById(t *testing.T) {
 
 		}
 	})
-}
-
-func TestGerBerryByName(t *testing.T) {
-	berryClient := clients.Berries{}
 
 	t.Run("valid name", func(t *testing.T) {
 		got, err := berryClient.GetBerryByName("cheri")
@@ -211,7 +207,7 @@ func TestGerBerryByName(t *testing.T) {
 	})
 }
 
-func TestGetBerryFirmnessById(t *testing.T) {
+func TestGetBerryFirmness(t *testing.T) {
 	berryClient := clients.Berries{}
 
 	t.Run("valid id", func(t *testing.T) {
@@ -238,10 +234,6 @@ func TestGetBerryFirmnessById(t *testing.T) {
 
 		}
 	})
-}
-
-func TestGetBerryFirmnessByName(t *testing.T) {
-	berryClient := clients.Berries{}
 
 	t.Run("valid name", func(t *testing.T) {
 		got, err := berryClient.GetBerryFirmnessByName("very-soft")
@@ -269,30 +261,30 @@ func TestGetBerryFirmnessByName(t *testing.T) {
 	})
 }
 
-func TestGetBerryFlavorById(t *testing.T) {
+func TestGetBerryFlavor(t *testing.T) {
 	berryClient := clients.Berries{}
+
+	want := struct {
+		Id              int
+		Name            string
+		NumberOfBerries int
+		ContestType     types.NamedApiResource
+		NumberOfNames   int
+	}{
+		Id:              1,
+		Name:            "spicy",
+		NumberOfBerries: 29,
+		ContestType: types.NamedApiResource{
+			Name: "cool",
+			Url:  "https://pokeapi.co/api/v2/contest-type/1/",
+		},
+		NumberOfNames: 5,
+	}
 
 	t.Run("valid id", func(t *testing.T) {
 		got, err := berryClient.GetBerryFlavorById(1)
 		if err != nil {
 			t.Errorf("did not return a berry flavor, %v", err)
-		}
-
-		want := struct {
-			Id              int
-			Name            string
-			NumberOfBerries int
-			ContestType     types.NamedApiResource
-			NumberOfNames   int
-		}{
-			Id:              1,
-			Name:            "spicy",
-			NumberOfBerries: 29,
-			ContestType: types.NamedApiResource{
-				Name: "cool",
-				Url:  "https://pokeapi.co/api/v2/contest-type/1/",
-			},
-			NumberOfNames: 5,
 		}
 
 		if got.Id != want.Id {
@@ -319,6 +311,48 @@ func TestGetBerryFlavorById(t *testing.T) {
 
 	t.Run("invalid id", func(t *testing.T) {
 		_, err := berryClient.GetBerryFlavorById(100)
+
+		switch err {
+		case types.ErrFetch, types.ErrBody, types.ErrUnmarshal:
+			return
+		case nil:
+			t.Error("got a berry flavor when expected an error:", err)
+		default:
+			t.Error("got an unexpected error:", err)
+
+		}
+	})
+
+	t.Run("valid name", func(t *testing.T) {
+		got, err := berryClient.GetBerryFlavorByName("spicy")
+		if err != nil {
+			t.Errorf("did not return a berry flavor, %v", err)
+		}
+
+		if got.Id != want.Id {
+			t.Errorf("got an id of %v, expected %v", got.Name, want.Id)
+		}
+
+		if got.Name != want.Name {
+			t.Errorf("got a name of %v, expected %v", got.Name, want.Name)
+		}
+
+		if len(got.Berries) != want.NumberOfBerries {
+			t.Errorf("got %v berries, expected %v", len(got.Berries), want.NumberOfBerries)
+		}
+
+		if got.ContestType != want.ContestType {
+			t.Errorf("got contest type %v, want %v", got.ContestType, want.ContestType)
+		}
+
+		if len(got.Names) != want.NumberOfNames {
+			t.Errorf("got %v names, expected %v", len(got.Names), want.NumberOfNames)
+		}
+
+	})
+
+	t.Run("invalid name", func(t *testing.T) {
+		_, err := berryClient.GetBerryFlavorByName("invalid")
 
 		switch err {
 		case types.ErrFetch, types.ErrBody, types.ErrUnmarshal:
